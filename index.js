@@ -17,7 +17,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+const DB = process.env.DATABASE.replace('<db_password>', process.env.DATABASE_PASSWORD);
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
