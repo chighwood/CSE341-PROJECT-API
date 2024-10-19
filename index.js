@@ -19,10 +19,7 @@ app.use(express.json());
 
 const DB = process.env.DATABASE.replace('<db_password>', process.env.DATABASE_PASSWORD);
 mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect(DB) // No need to include useNewUrlParser and useUnifiedTopology anymore
   .then(() => console.log('DB connection successful!'))
   .catch((err) => console.error('DB connection error:', err));
 
