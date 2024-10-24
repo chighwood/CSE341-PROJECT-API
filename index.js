@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const animalRoutes = require('./routes/animalRoutes');
 const zooRoutes = require('./routes/zooRoutes');
+const staffRoutes = require('./routes/staffRoutes');
+const userRoutes = require('./routes/userRoutes');
 const viewRouter = require('./routes/githubUserRoutes');
 const swaggerRouter = require('./routes/swaggerRoutes');
 const mongoose = require('mongoose');
@@ -19,7 +21,7 @@ app.use(express.json());
 
 const DB = process.env.DATABASE.replace('<db_password>', process.env.DATABASE_PASSWORD);
 mongoose
-  .connect(DB) // No need to include useNewUrlParser and useUnifiedTopology anymore
+  .connect(DB)
   .then(() => console.log('DB connection successful!'))
   .catch((err) => console.error('DB connection error:', err));
 
@@ -78,6 +80,8 @@ app.use('/', viewRouter);
 app.use('/api/animal', animalRoutes);
 app.use('/api/zoo', zooRoutes);
 app.use('/', swaggerRouter);
+app.use('/api/staff', staffRoutes);
+app.use('/api/user', userRoutes);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
