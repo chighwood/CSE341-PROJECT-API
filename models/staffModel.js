@@ -4,7 +4,6 @@ const staffSchema = new mongoose.Schema(
     {
         staffId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Staff',
             required: true
         },
         job: {
