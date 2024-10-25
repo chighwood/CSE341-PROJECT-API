@@ -3,7 +3,7 @@ const cors = require('cors');
 const animalRoutes = require('./routes/animalRoutes');
 const zooRoutes = require('./routes/zooRoutes');
 const staffRoutes = require('./routes/staffRoutes');
-// const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes');
 const viewRouter = require('./routes/githubUserRoutes');
 const swaggerRouter = require('./routes/swaggerRoutes');
 const mongoose = require('mongoose');
@@ -81,7 +81,7 @@ app.use('/api/animal', animalRoutes);
 app.use('/api/zoo', zooRoutes);
 app.use('/', swaggerRouter);
 app.use('/api/staff', staffRoutes);
-// app.use('/api/user', userRoutes);
+app.use('/api/user', userRoutes);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

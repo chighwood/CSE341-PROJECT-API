@@ -1,87 +1,83 @@
+const Staff = require('../models/staffModel');
 const { handleErrors } = require('./errorController');
 const Joi = require('joi');
-const Staff = require('../models/staffModel');
 
-// Validation schema for creating an staff
+// Validation schema for creating a staff member
 const staffSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-  job: Joi.string().required(),
+  staffId: Joi.string().required(),
+  name: Joi.string().min(2).required(),
+  position: Joi.string().required(),
+  department: Joi.string().required()
 });
 
-// Validation schema for updating an staff
+// Validation schema for updating a staff member
 const staffSchemaForUpdate = Joi.object({
-  name: Joi.string().min(3).optional(),
-  job: Joi.string().optional(),
+  staffId: Joi.string().optional(),
+  name: Joi.string().min(2).optional(),
+  position: Joi.string().optional(),
+  department: Joi.string().optional()
 });
 
-// Create a new staff
+// Create a new staff member
 exports.createStaff = handleErrors(async (req, res) => {
-
+  
   const { error } = staffSchema.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   try {
-    const staff = new Staff(req.body);
-    await staff.save();
-    res.status(201).json(staff);
-  } catch {
-    res.status(500).json({ error: 'Error creating staff.' });
+    const newStaff = await Staff.create(req.body);
+    res.status(201).json(newStaff);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
-// Update a staff
-exports.updateStaff = handleErrors(async (req, res) => {
+// Get all staff members
+exports.getAllStaff = handleErrors(async (req, res) => {
+  try {
+    const staffMembers = await Staff.find();
+    res.json(staffMembers);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-  const { staffId } = req.params;
+// Get a staff member by ID
+exports.getStaffById = handleErrors(async (req, res) => {
+  try {
+    const staff = await Staff.findOne({ staffId: req.params.staffId });
+    if (!staff) return res.status(404).json({ error: 'Staff not found' });
+    res.json(staff);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+// Update a staff member by ID
+exports.updateStaff = handleErrors(async (req, res) => {
+  
   const { error } = staffSchemaForUpdate.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   try {
-    const updatedStaff = await Animal.findByIdAndUpdate(staffId, req.body, { new: true });
+    const updatedStaff = await Staff.findOneAndUpdate({ staffId: req.params.staffId }, req.body, {
+      new: true
+    });
     if (!updatedStaff) return res.status(404).json({ error: 'Staff not found' });
     res.json(updatedStaff);
-  } catch {
-    res.status(500).json({ error: 'Error updating staff.' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
-// Get all staff
-exports.getAllStaff = handleErrors(async (req, res) => {
-
-  try {
-    const staff = await Staff.find();
-    res.status(200).json(staff);
-  } catch {
-    res.status(500).json({ error: 'Error fetching staff.' });
-  }
-});
-
-// Get a single staff by ID
-exports.getStaffById = handleErrors(async (req, res) => {
-
-  const { staffId } = req.params;
-  try {
-    const staff = await Staff.findById(staffId);
-    if (!staff) {
-      return res.status(404).json({ error: 'Staff not found.' });
-    }
-    res.status(200).json(staff);
-  } catch {
-    res.status(500).json({ error: 'Error retrieving staff info.' });
-  }
-});
-
-// Delete an staff by ID
+// Delete a staff member by ID
 exports.deleteStaff = handleErrors(async (req, res) => {
-
-  const { staffId } = req.params;
+  
   try {
-    const staff = await Staff.findByIdAndDelete(staffId);
-    if (!staff) {
-      return res.status(404).json({ error: 'Staff not found.' });
-    }
-    res.status(200).json({ message: 'Staff deleted successfully.' });
-  } catch {
-    res.status(500).json({ error: 'Error deleting staff.' });
+    const deletedStaff = await Staff.findOneAndDelete({ staffId: req.params.staffId });
+    if (!deletedStaff) return res.status(404).json({ error: 'Staff not found' });
+    res.json({ message: 'Staff deleted' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });

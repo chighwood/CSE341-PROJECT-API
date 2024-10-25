@@ -1,21 +1,13 @@
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema(
-    {
-        staffId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-        job: {
-            type: String,
-            required: true
-        }
-    },
-    {
-        timestamps: true
-    }
+  {
+    staffId: { type: String, unique: true, required: true },
+    name: { type: String, required: true },
+    position: { type: String, required: true },
+    department: { type: String, required: true }
+  },
+  { timestamps: true }
 );
 
-const Staff = mongoose.model('Staff', staffSchema);
-
-module.exports = Staff;
+module.exports = mongoose.model('Staff', staffSchema);
